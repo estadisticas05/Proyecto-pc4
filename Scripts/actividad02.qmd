@@ -1,0 +1,126 @@
+---
+title: "PC1-2: Importación, Limpieza y Transformación de Datos"
+format: pdf
+editor: visual
+---
+
+## Quarto
+
+GRUPO 05: CIRROSIS
+
+-Hidalgo Villasis Patricia Fernanda
+
+-Ortiz Arenas Lourdes Lisseth
+
+-Aliaga Jimenez Aracely
+
+-Reyes Ayala Abraham Arturo
+
+-Arámbulo Albino Nayeli
+
+## **Resumen del trabajo PC1-2**
+
+En este trabajo se documentará el proceso completo de preparación de una base de datos clínica utilizando RStudio. El objetivo principal es aplicar buenas prácticas de análisis de datos que incluyan:
+
+**Importación** del conjunto de datos desde un archivo externo
+
+**Exportación** del dataset limpio para su uso posterior.
+
+**Limpieza de datos**, incluyendo la estandarización de nombres de variables, la conversión de variables categóricas a factores, y la corrección de posibles inconsistencias en los valores.
+
+**Transformación de datos**, como la creación de nuevas variables derivadas (por ejemplo, clasificaciones de bilirrubina por niveles) y la recategorización de variables existentes (como colapsar etapas clínicas en grupos más generales).
+
+## a. Importación y Exportación del Dataset
+
+```{r}
+# Cargar paquetes necesarios
+library(readr)
+library(dplyr)
+library(janitor)
+```
+
+```{r}
+library(readxl)
+```
+
+```{r}
+file.choose()
+```
+
+```{r}
+data <- read_excel("C:\\Users\\User\\Downloads\\cirrosis.xlsx")
+data
+```
+
+```{r}
+# Ver las primeras filas
+head(data)
+```
+
+## Limpieza de Datos
+
+Limpieza de nombres de variables
+
+```{r}
+library(dplyr)     # Para %>%
+library(janitor)   # Para clean_names()
+```
+
+```{r}
+# Aplicar nombres en snake_case
+data <- data %>%
+  clean_names()
+```
+
+```{r}
+# Verificar los nombres
+names(data)
+```
+
+##Limpieza de categorías (si aplica)
+
+```{r}
+# Convertir posibles variables categóricas a factor
+data <- data %>%
+  mutate(
+    ascitis = factor(ascitis),
+    hepatomegalia = factor(hepatomegalia),
+    aracnoides = factor(aracnoides),
+    edema = factor(edema),
+    etapa = factor(etapa)
+  )
+```
+
+## Transformación de Datos
+
+Clasificación por niveles de bilirrubina
+
+```{r}
+# Crear variable para categorizar bilirrubina
+data <- data %>%
+  mutate(
+    nivel_bilirrubina = case_when(
+      bilirrubina < 1 ~ "Bajo",
+      bilirrubina >= 1 & bilirrubina < 2 ~ "Medio",
+      bilirrubina >= 2 ~ "Alto",
+      TRUE ~ NA_character_
+    )
+  )
+```
+
+Colapsar niveles de etapa clínica
+
+```{r}
+data <- data %>%
+  mutate(
+    etapa_colapsada = case_when(
+      etapa %in% c("1", "2") ~ "Inicial",
+      etapa %in% c("3", "4") ~ "Avanzada",
+      TRUE ~ "Desconocido"
+    )
+  )
+```
+
+## Conclusiones
+
+En este informe se presentó el proceso completo de importación, limpieza y transformación de una base de datos clínica. Estas tareas son clave para preparar los datos antes de realizar cualquier análisis estadístico o modelado predictivo.

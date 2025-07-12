@@ -1,0 +1,124 @@
+---
+title: "PC1-3: Resumen de datos"
+author: "Hidalgo Villasis Patricia Ortiz Arenas Lourdes Aliaga Jimenez Aracely Reyes Ayala Abraham Arámbulo Albino Nayeli"
+format: pdf
+editor: visual
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+Grupo05:
+
+-Hidalgo Villasis Patricia Fernanda
+
+-Ortiz Arenas Lourdes Lisseth
+
+-Aliaga Jimenez Aracely
+
+-Reyes Ayala Abraham Arturo
+
+-Arámbulo Albino Nayeli
+
+# Introducción
+
+En este documento se presenta el resumen estadístico descriptivo del dataset **"cirrosis"**. El objetivo es documentar el procedimiento para resumir los datos mediante medidas de centralidad y dispersión, así como la elaboración de la **Tabla 1**.
+
+# Carga de Datos
+
+```{r}
+library(readxl)
+```
+
+```{r}
+file.choose()
+```
+
+```{r}
+data <- read_excel("C:\\Users\\User\\Downloads\\cirrosis (1).xlsx")
+```
+
+```{r}
+head(data)
+```
+
+## Resumen de Datos
+
+A continuación, se resumen los datos mediante medidas de tendencia central (media, mediana) y dispersión (desviación estándar, rango).
+
+```{r}
+# Librerías necesarias
+library(dplyr)
+library(tibble)
+library(knitr)
+```
+
+```{r}
+# Resumen estadístico general
+summary(data)
+```
+
+##Calculamos detallado de medidas estadísticas
+
+```{r}
+# Función personalizada para calcular medidas de resumen
+resumen_variable <- function(x) {
+  c(
+    Media = mean(x, na.rm = TRUE),
+    Mediana = median(x, na.rm = TRUE),
+    Desviación_Estándar = sd(x, na.rm = TRUE),
+    Mínimo = min(x, na.rm = TRUE),
+    Máximo = max(x, na.rm = TRUE),
+    N_valores = sum(!is.na(x))
+  )
+}
+```
+
+```{r}
+# Aplicamos la función a variables numéricas
+data %>%
+  select(Edad, Dias_Seguimiento, Bilirrubina, Colesterol, Albumina, Cobre, Fosfatasa_Alcalina, SGOT, Trigliceridos, Plaquetas, Tiempo_Protrombina) %>%
+  summarise_all(resumen_variable) %>%
+  t() %>%
+  as.data.frame() %>%
+  rownames_to_column(var = "Variable") %>%
+  kable(digits = 2, caption = "Tabla 1: Estadísticos Descriptivos de Variables Numéricas")
+```
+
+## Tabla 1: Variables Categóricas
+
+También vamos a resumir las variables categóricas mediante frecuencias absolutas y relativas.
+
+```{r}
+# Función para tablas de frecuencia
+tabla_frecuencia <- function(variable) {
+  table <- table(variable)
+  prop <- prop.table(table)
+  data.frame(
+    Categoría = names(table),
+    Frecuencia = as.vector(table),
+    Porcentaje = round(as.vector(prop) * 100, 2)
+  )
+}
+```
+
+```{r}
+# Resumimos las variables categóricas
+categoricas <- c("Estado", "Medicamento", "Sexo", "Ascitis", "Hepatomegalia", "Aracnoides", "Edema", "Etapa")
+```
+
+```{r}
+# Creamos tablas de frecuencia
+lista_tablas <- lapply(data[categoricas], tabla_frecuencia)
+names(lista_tablas) <- categoricas
+```
+
+```{r}
+# Mostramos tablas de forma ordenada
+lista_tablas
+```
+
+## Conclusiones
+
+Se ha documentado el procedimiento para resumir los datos de un estudio sobre cirrosis. Se presentaron medidas de tendencia central, dispersión, y distribución de las variables categóricas mediante frecuencias.

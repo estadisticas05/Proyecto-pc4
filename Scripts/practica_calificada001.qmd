@@ -1,0 +1,64 @@
+---
+title: "grupo05"
+format: html
+editor: visual
+---
+
+#### GRUPO 05
+
+1.  Hidalgo Villasis Patricia Fernanda
+
+2.  Ortiz Arenas Lourdes Lisseth
+
+3.  Aliaga Jimenez Aracely
+
+4.  Reyes Ayala Abraham Arturo
+
+5.  Arámbulo Albino Nayeli
+
+### FUNCIONES
+
+**1era funcion: var()**
+
+Calcula la varianza muestral de un conjunto de datos.
+
+```{r}
+edades <- c(20, 22, 25, 30, 35)
+var(edades)
+```
+
+**2da funcion: lm()**
+
+Ajusta un modelo de regresión lineal entre una variable dependiente y una o más variables independientes.
+
+```{r}
+modelo <- lm(mpg ~ wt, data = mtcars)
+summary(modelo)
+
+```
+
+**3era funcion: sd()**
+
+Calcula la desviación estándar muestral de un conjunto de datos.
+
+```{r}
+edades <- c(20, 22, 25, 30, 35)
+desviacion_estandar <- sd(edades)
+desviacion_estandar
+```
+
+### PAQUETES
+
+```{r}
+#install.packages("dplyr")
+#install.packages("ggplot2")
+install.packages("gt")
+```
+
+```{r}
+#library(dplyr)
+#library(ggplot2)
+library(gt)
+```
+
+## 
